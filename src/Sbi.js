@@ -11,46 +11,46 @@ class Sbi extends Shoken {
 
   async search(){
     // 検索コードの入力前準備
-    if(this.query.trade_category === 'toshi_shintaku'){
+    if(this.query.shoken_category === 'toshi_shintaku'){
       await this.handleClick('#tabLink2 a')
     }
 
     // 検索コードの入力
-    if(this.query.trade_category === 'toshi_shintaku'){
-      await this.handleFill('#fundSearch', this.query.trade_code)
-    } else if(this.query.trade_category === 'japan_kabu'){
-      await this.handleFill('#top_stock_sec', this.query.trade_code)
+    if(this.query.shoken_category === 'toshi_shintaku'){
+      await this.handleFill('#fundSearch', this.query.shoken_code)
+    } else if(this.query.shoken_category === 'japan_kabu'){
+      await this.handleFill('#top_stock_sec', this.query.shoken_code)
     }
 
     // 検索ボタンのクリック
-    if(this.query.trade_category === 'toshi_shintaku'){
+    if(this.query.shoken_category === 'toshi_shintaku'){
       await this.handleClick('#tabSearch2 a')
       await this.sleep(5000) // 画面遷移のため15秒待ち
       await this.handleClick('a.fundDetail')
-    } else if(this.query.trade_category === 'japan_kabu'){
+    } else if(this.query.shoken_category === 'japan_kabu'){
       await this.handleClick('#srchK a')
     }
   }
 
   async buy(){
-    if(this.query.trade_category === 'toshi_shintaku'){
+    if(this.query.shoken_category === 'toshi_shintaku'){
       return this.toshi_shintaku_buy()
     }
   }
-  async toshi_shintaku_buy(skip_trade_button = false, retryCount = 0){
+  async toshi_shintaku_buy(skip_shoken_button = false, retryCount = 0){
     var ele
-    if(!skip_trade_button){
+    if(!skip_shoken_button){
       // 金額買付 口数買付をクリック
-      if(this.query.trade_by_price){
+      if(this.query.shoken_by_price){
         await this.handleClick('.button.price a')
       } else {
         await this.handleClick('.button.unit a')
       }
     }
 
-    ele = await this.handle('input[type="password"][name="trade_pwd"]')
+    ele = await this.handle('input[type="password"][name="shoken_pwd"]')
     if(!ele){
-      if(this.query.trade_auto_agreement){
+      if(this.query.shoken_auto_agreement){
         // 同意して次へを自動でクリックする
         ele = await this.handle('img[alt="同意して次へ"]')
         if(ele) {
@@ -62,24 +62,24 @@ class Sbi extends Shoken {
       return false
     }
     await this.sleep(10)
-    await ele.type(String(this.query.trade_password))
+    await ele.type(String(this.query.shoken_password))
 
-    if(this.query.trade_by_price){
+    if(this.query.shoken_by_price){
       // 預かり区分の設定
-      if(this.query.trade_azukari_kubun === 'nisa'){
+      if(this.query.shoken_azukari_kubun === 'nisa'){
         await this.handleClick('#nisaazukari')
       }
 
       // 分配金の設定
       ele = 'input[type="radio"][name="reinvest"]'
-      if(this.query.trade_bunpai === 'saitoshi'){
+      if(this.query.shoken_bunpai === 'saitoshi'){
         ele += '[value="2"]'
       } else {
         ele += '[value="1"]'
       }
       await this.handleClick(ele)
 
-      await this.handleFill('input[name="payment"]', this.query.trade_amount)
+      await this.handleFill('input[name="payment"]', this.query.shoken_amount)
     }
     await this.handleClick('input[name="skip_estimate"]')
 
@@ -100,7 +100,7 @@ class Sbi extends Shoken {
       }
     }
 
-    ele = await this.handle('input[type="password"][name="trade_pwd"]')
+    ele = await this.handle('input[type="password"][name="shoken_pwd"]')
     if(ele){
       if(retryCount < 1){
         return this.toshi_shintaku_buy(true, retryCount + 1)

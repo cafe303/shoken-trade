@@ -50,7 +50,7 @@ class Shoken {
   }
   async run(){
     console.log('Run start')
-    for(var i = 0; i <= this.query.trade_retry; ++i){
+    for(var i = 0; i <= this.query.shoken_retry; ++i){
       try{
         await this._run()
       }catch(e){
